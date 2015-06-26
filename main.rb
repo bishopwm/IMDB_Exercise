@@ -1,24 +1,20 @@
-# SL10. More TDD (I mean, TV) series!
-
-
 require 'imdb'
-
 
 class ImdbStuff
 	
 	def count_search_results
-		puts "How many results are there for 'Cats' (via IMDB)?"
-		p Imdb::Search.new("cats").movies.size
+		#puts "How many results are there for 'Cats' (via IMDB)?"
+		Imdb::Search.new("cats").movies.size
 	end
 
 	def seasons_info
-		seasons = {
+		{
 	    'Breaking Bad' => Imdb::Serie.new("0903747").seasons.size,
 	    'Friends' => Imdb::Serie.new("0108778").seasons.size,
 	    'Game of Thrones' => Imdb::Serie.new("0944947").seasons.size,
 	    'The Office' => Imdb::Serie.new("0386676").seasons.size
-	  		}
-  	end
+	  }
+  end
 
 	def sort_the_seasons
 	  	result = seasons_info.sort_by {|key, value| value }
@@ -27,13 +23,11 @@ class ImdbStuff
 	end
 
 	def most_seasons
-		p sort_the_seasons[0][0]
+		sort_the_seasons[0][0]
 	end
 
-
-
 	def episodes_info
-		episodes = {
+		{
 			'Friends' => Imdb::Serie.new("0108778").season(1).episodes.size,
 			'Breaking Bad' => Imdb::Serie.new("0903747").season(1).episodes.size,
 			'Game of Thrones' => Imdb::Serie.new("0944947").season(1).episodes.size,
@@ -44,70 +38,79 @@ class ImdbStuff
 	def most_episodes
 		result = episodes_info.sort_by {|key, value| value }
 		most = result.reverse
-		p most[0][0]
+		most[0][0]
 	end
 
+	def ratings_info
+		{
+			'Friends' => Imdb::Serie.new("0108778").rating, 
+			'Breaking Bad' => Imdb::Serie.new("0903747").rating, 
+			'Game of Thrones' => Imdb::Serie.new("0944947").rating, 
+			'The Office' => Imdb::Serie.new("0386676").rating
+		}
+	end
 
+	def best_rated
+		ratings = ratings_info.sort_by {|key, value| value }
+	  best = ratings.reverse
+	  best[0][0]
+	end
 end
-
-private
-
-
+			
 imdbstuff = ImdbStuff.new
 imdbstuff.count_search_results
 imdbstuff.seasons_info
 imdbstuff.sort_the_seasons
-puts "Which show has the most seasons? (via IMDB)"
+#puts "Which show has the most seasons? (via IMDB):"
 imdbstuff.most_seasons
 
 imdbstuff.episodes_info
-puts "Which series has the most episodes? (via IMDB):"
+#puts "Which series has the most episodes? (via IMDB):"
 imdbstuff.most_episodes
+imdbstuff.ratings_info
+imdbstuff.best_rated
 
 
+#---------------------------TESTING - TESTING - TESTING - TESTING----------------------------
+# describe ImdbStuff do
+#   before do
+#     @imdbstuff = ImdbStuff.new
+#   end
 
-describe ImdbStuff do
-  before do
-    @imdbstuff = ImdbStuff.new
-  end
+#   describe "#count_search_results" do
+#     it "should return the number of 'Cats' results on IMDB" do
+#       expect(@imdbstuff.count_search_results).to eq(200)
+#     end
+#   end
 
-  describe "#count_search_results" do
-    it "should return the number of 'Cats' results on IMDB" do
-      expect(@imdbstuff.count_search_results).to eq(200)
-    end
-  end
+#   describe "#most_seasons" do
+#   	it "should return series with the most seasons" do
+#   		expect(@imdbstuff.most_seasons).to eq("Friends")
+#   	end
+#   end
 
-  describe "#most_seasons" do
-  	it "should return series with the most seasons" do
-  		expect(@imdbstuff.most_seasons).to eq("Friends")
-  	end
-  end
+#   describe "#most_episodes" do
+#   	it "should return series with the most episodes" do
+#   		expect(@imdbstuff.most_episodes).to eq("Friends")
+# 		end
+# 	end
 
-  describe "#most_episodes" do
-  	it "should return series with the most episodes" do
-  		expect(@imdbstuff.most_episodes).to eq("Friends")
-		end
-	end
-end
-
-
-
-
-
-
-
-
-
-
+#   describe "#best_rated" do
+#   	it "should return the best rated show" do
+#   		expect(@imdbstuff.best_rated).to eq("Game of Thrones")
+#   	end
+#   end
+# end
 
 
 
 
+#----------------- DIRECTIONS - DIRECTIONS - DIRECTIONS -DIRECTIONS -----------------------------
 
-# The third method will be similar to "most_seasons_from", but instead of having the season into account, it will have the number of episodes
-# into account.
 
-# The four method will be a comparator (it might turn into our best friend!). It will take an array of strings, each one being
+
+
+# The fourth method will be a comparator (it might turn into our best friend!). It will take an array of strings, each one being
 # the name of a TV show, and it will return the best one using IMDB ratings. For example, if we pass Breaking Bad, Pacific Blue (oh, those
 # times!) and The Affair, it will return Breaking Bad (although The Affair is really good, and just won a Golden Globe, even when Golden Globes
 # are worthless).
@@ -130,3 +133,5 @@ end
 # which has information like the number of episodes, just use the id to fetch the serie directly:
 #   dexter_movie = Imdb::Search.new(‘Dexter’).movies.first
 #   dexter_serie = Imdb::Serie.new(dexter_movie.id)
+
+	
